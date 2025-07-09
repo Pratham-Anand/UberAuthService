@@ -24,7 +24,7 @@ public class Passenger extends com.example.UberAuthService.models.BaseModel {
     private String phoneNumber;
 
     @Column(nullable=false)
-    private String Password;
+    private String password;
 
     @OneToMany(mappedBy = "passenger",fetch = FetchType.LAZY)
     private List<Booking> bookings =new ArrayList<>();
