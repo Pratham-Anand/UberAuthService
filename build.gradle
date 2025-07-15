@@ -19,9 +19,21 @@ configurations {
 	}
 }
 
+//repositories {
+//	maven {
+//		url = uri("file:///D:/UberProject/UberEntityService")
+//	}
+//	mavenCentral()
+////	mavenLocal()
+//}
 repositories {
+	maven {
+		url = uri("file:///D:/UberProject/UberEntityService/repo")
+	}
 	mavenCentral()
 }
+
+
 
 dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
@@ -37,6 +49,7 @@ dependencies {
 	annotationProcessor 'org.projectlombok:lombok'
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 	testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
+	implementation  'com.example:uberentityservice:0.0.2-SNAPSHOT'
 }
 
 tasks.named('test') {
