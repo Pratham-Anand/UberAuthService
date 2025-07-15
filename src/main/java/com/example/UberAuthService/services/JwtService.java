@@ -27,7 +27,7 @@ public class JwtService implements CommandLineRunner {
     private String secret;
 
 
-    private String createToken(Map<String,Object> payload, String email){
+    public String createToken(Map<String,Object> payload, String email){
 
         Date now=new Date();
         Date expiryDate= new Date(now.getTime()+expiry*1000L);
@@ -45,7 +45,6 @@ public class JwtService implements CommandLineRunner {
         return Jwts.builder()
                 .claims(payload)
                 .issuedAt(new Date(System.currentTimeMillis()))
-                .expiration(expiryDate).subject(email)
                 .expiration(expiryDate)
                 .subject(email)
                 .signWith(getSignKey())
@@ -53,25 +52,29 @@ public class JwtService implements CommandLineRunner {
 
     }
 
-    private Key getSignKey() {
+    public String createToken(String email) {
+        return createToken(new HashMap<>(), email);
+    }
+
+    public Key getSignKey() {
         return Keys.hmacShaKeyFor(secret.getBytes(StandardCharsets.UTF_8));
     }
 
-    private Date extractExpiration(String token){
+    public Date extractExpiration(String token){
         return extractClaim(token,Claims::getExpiration);
     }
 
 
-    private boolean isTokenExpired(String token) {
+    public boolean isTokenExpired(String token) {
         return extractExpiration(token).before(new Date());
     }
 
-    private String extractEmail(String token) {
+    public String extractEmail(String token) {
         return extractClaim(token, Claims::getSubject);
 
     }
 
-    private Boolean validateToken(String token, String email){
+    public Boolean validateToken(String token, String email){
         final String userEmailFetchedFromToken=extractEmail(token);
         return (userEmailFetchedFromToken.equals((email)) && !isTokenExpired(token));
     }
@@ -82,7 +85,7 @@ public class JwtService implements CommandLineRunner {
     return claimsResolver.apply(claims);
     }
 
-    private Claims extractAllPayloads(String token) {
+    public Claims extractAllPayloads(String token) {
     
         return Jwts
                 .parser()
@@ -92,7 +95,7 @@ public class JwtService implements CommandLineRunner {
                 .getBody();
     }
 
-    private Object extractPayload(String token,String payloadKey){
+    public Object extractPayload(String token,String payloadKey){
         Claims claim =extractAllPayloads(token);
         return (Object) claim.get(payloadKey);
 
@@ -104,10 +107,10 @@ public class JwtService implements CommandLineRunner {
 
         Map<String,Object> mp=new HashMap<>();
 
-        mp.put("email", "a@b.com");
-        mp.put("phoneNumber", "9999999999");
-        String token = createToken(mp, "sanket");
-        System.out.println("Generated token is: " + token);
-        System.out.println(extractPayload(token, "email").toString());
+//        mp.put("email", "a@b.com");
+//        mp.put("phoneNumber", "9999999999");
+//        String token = createToken(mp, "sanket");
+//        System.out.println("Generated token is: " + token);
+//        System.out.println(extractPayload(token, "email").toString());
     }
 }
